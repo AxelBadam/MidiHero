@@ -3,6 +3,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "midifile/include/Binasc.h"
+#include "midifile/include/MidiEvent.h"
+#include "midifile/include/MidiEventList.h"
+#include "midifile/include/MidiFile.h"
+#include "midifile/include/MidiMessage.h"
+#include "midifile/include/Options.h"
 #include <cmath>
 
 #define HEIGHT 600

@@ -2,6 +2,7 @@
 #include <SFML/Audio.hpp>
 #include "Note.hpp"
 
+
 class Game {
 public:
 	Game();

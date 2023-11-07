@@ -1,6 +1,6 @@
 NAME = test
 CC = c++
-CFLAGS = -Wall -Werror -Wextra -std=c++11
+CFLAGS = -std=c++11
 SRC =  main.cpp Note.cpp Game.cpp
 OBJ = $(SRC:.cpp=.o)
 RM = rm -f
@@ -8,10 +8,10 @@ RM = rm -f
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(CFLAGS) -L/Users/atuliara/.brew/Cellar/sfml/2.6.0/lib -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system $(OBJ)
+	$(CC) -o $(NAME) $(CFLAGS) /Users/atuliara/reorg/midifile/lib/libmidifile.a -L/Users/atuliara/.brew/Cellar/sfml/2.6.0/lib -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system $(OBJ)
 
 $(OBJ): $(SRC)
-	$(CC) -c $(CFLAGS) -I/Users/atuliara/.brew/Cellar/sfml/2.6.0/include $(SRC)
+	$(CC) -c $(CFLAGS) -I/Users/atuliara/.brew/Cellar/sfml/2.6.0/include -I/Users/atuliara/reorg/midifile/include $(SRC)
 
 clean:
 	$(RM) $(OBJ)
