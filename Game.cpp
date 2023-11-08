@@ -2,11 +2,16 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+using namespace std;
+using namespace smf;
+
 int score = 0;
 
 Game::Game() {}
 
 Game::~Game() {}
+
+//need to check this, key presses not working
 
 void Game::handleKeyPresses(std::vector<Note> &notes, float hitLineY) 
 {
@@ -69,24 +74,46 @@ std::vector<sf::RectangleShape> fillZones( sf::RenderWindow &window)
 	return zones;
 }
 
-std::vector<Note> fillVector()
+// std::vector<Note> fillVector()
+// {
+// 	std::vector<Note> notes;
+// 	notes.emplace_back(416.67f, 0);
+// 	notes.emplace_back(416.67f, 1);
+// 	notes.emplace_back(416.67f, 2);
+// 	notes.emplace_back(416.67f, 3);
+// 	notes.emplace_back(416.67f, 4);
+// 	return notes;
+// }
+
+void Game::convertMidiToNotes(const string& midiFilePath)
 {
-	std::vector<Note> notes;
-	notes.emplace_back(416.67f, 0);
-	notes.emplace_back(416.67f, 1);
-	notes.emplace_back(416.67f, 2);
-	notes.emplace_back(416.67f, 3);
-	notes.emplace_back(416.67f, 4);
-	return notes;
+    MidiFile midifile;
+    midifile.read(midiFilePath);
+    midifile.doTimeAnalysis();
+    midifile.linkNotePairs();
+	float fallTime = (HEIGHT - 100) / SPEED;
+
+    for (int event = 0; event < midifile[1].size(); ++event) 
+	{
+		
+        if (midifile[1][event].isNoteOn())
+		{
+			
+            Note n(SPEED, rand() % 4);
+            n.time = midifile[1][event].seconds - 6;
+            n.duration = midifile[1][event].getDurationInSeconds();
+            notes.push_back(n);
+			std::cout << n.time << std::endl;
+        }
+    }
 }
 
 void Game::init()
 {
 	window.create(sf::VideoMode(800, 600), "SFML Rhythm Game");
 	zones = fillZones(window);
-	notes = fillVector();
-	
-    if (!music.openFromFile("/Users/atuliara/Desktop/Tengri - Transcendence.mp3"))
+
+    if (!music.openFromFile("/Users/atuliara/reorg/Never-Gonna-Give-You-Up-2.mp3"))
         exit(-1);
 
     if (!font.loadFromFile("/Users/atuliara/Desktop/Teko/Teko-VariableFont_wght.ttf"))
@@ -104,29 +131,34 @@ void Game::processEvents()
     sf::Event event;
     while (window.pollEvent(event)) 
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-			exit (0);
    		if (event.type == sf::Event::Closed)
               window.close();
     }
-    for (auto &note : notes) 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		exit (0);
+	
+    for (auto &note : notes)
 	{
-        note.update(deltaTime);
-    	if (note.isBottom(window.getSize().y) && !note.hit) 
-    	     note.reset(note.i);
+		float currentTime = music.getPlayingOffset().asSeconds();
+		if (currentTime >= note.time)
+        	note.update(deltaTime);
+		
    	}
 }
 
 void Game::render() 
 {
+	float currentTime;
     window.clear();
 	for (auto &zone : zones) 
 	{
 		window.draw(zone); // Draw the zones
 	}
-	for (auto &note : notes) 
+	for (auto &note : notes)
 	{
-		window.draw(note.shape); // Draw the notes
+		currentTime = music.getPlayingOffset().asSeconds();
+		if (currentTime >= note.time)
+			window.draw(note.shape); // Draw the notes
 	}
 	scoreText.setString("Score: " + std::to_string(score));
 	window.draw(scoreText);
@@ -138,9 +170,10 @@ void Game::gameLoop()
 {
 	sf::Clock clock; // Starts the clock
 	music.play();
-    while (window.isOpen()) 
+
+    while (window.isOpen())
 	{
-        deltaTime = clock.restart().asSeconds();
+		deltaTime = clock.restart().asSeconds();
 		processEvents();
 		handleKeyPresses(notes, window.getSize().y - 100);	
 		render();

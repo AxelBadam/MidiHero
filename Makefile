@@ -11,7 +11,7 @@ $(NAME): $(OBJ)
 	$(CC) -o $(NAME) $(CFLAGS) /Users/atuliara/reorg/midifile/lib/libmidifile.a -L/Users/atuliara/.brew/Cellar/sfml/2.6.0/lib -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system $(OBJ)
 
 $(OBJ): $(SRC)
-	$(CC) -c $(CFLAGS) -I/Users/atuliara/.brew/Cellar/sfml/2.6.0/include -I/Users/atuliara/reorg/midifile/include $(SRC)
+	$(CC) -c $(CFLAGS) -I/Users/atuliara/.brew/Cellar/sfml/2.6.0/include $(SRC)
 
 clean:
 	$(RM) $(OBJ)

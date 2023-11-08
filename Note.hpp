@@ -3,21 +3,20 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "midifile/include/Binasc.h"
-#include "midifile/include/MidiEvent.h"
-#include "midifile/include/MidiEventList.h"
-#include "midifile/include/MidiFile.h"
-#include "midifile/include/MidiMessage.h"
-#include "midifile/include/Options.h"
 #include <cmath>
 
 #define HEIGHT 600
 #define WIDTH 800
+#define SPEED 416.67f
 
 class Note {
 public:
 	Note(float noteSpeed, int i);
     ~Note();
+
+
+	float time;
+	float duration;
 
 	void update(float deltaTime);
 	void reset(int i);
