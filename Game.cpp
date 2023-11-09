@@ -11,56 +11,58 @@ Game::Game() {}
 
 Game::~Game() {}
 
-//need to check this, key presses not working
-
-void Game::handleKeyPresses(std::vector<Note> &notes, float hitLineY) 
+void Game::handleKeyPresses(float hitLineY)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) && !notes[0].hit) 
+	for (int i = 0; i < notes.size(); i++)
 	{
-        if (std::fabs(notes[0].shape.getPosition().y - hitLineY) < 10) 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) && !notes[i].hit) 
 		{
-            notes[0].hit = true;
-            score++;
-            notes[0].reset(notes[0].i);
-        }
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::H) && !notes[0].hit) 
-	{
-        if (std::fabs(notes[1].shape.getPosition().y - hitLineY) < 10) 
+			if (std::fabs(notes[i].shape.getPosition().y - hitLineY) < 10) 
+			{
+				notes[i].hit = true;
+				score++;
+				notes[i].~Note();
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::H) && !notes[i].hit)
 		{
-            notes[1].hit = true;
-           	score++;
-            notes[1].reset(notes[1].i);
-        }
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && !notes[0].hit) 
-	{
-        if (std::fabs(notes[2].shape.getPosition().y - hitLineY) < 10) 
+			if (std::fabs(notes[i].shape.getPosition().y - hitLineY) < 10) 
+			{
+				notes[i].hit = true;
+				score++;
+				notes[i].~Note();
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && !notes[i].hit)
 		{
-            notes[2].hit = true;
-            score++;
-            notes[2].reset(notes[2].i);
-        }
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && !notes[0].hit) 
-	{
-        if (std::fabs(notes[3].shape.getPosition().y - hitLineY) < 10) 
+			if (std::fabs(notes[i].shape.getPosition().y - hitLineY) < 10) 
+			{
+				notes[i].hit = true;
+				score++;
+				notes[i].~Note();
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && !notes[i].hit) 
 		{
-            notes[3].hit = true;
-            score++;
-            notes[3].reset(notes[3].i);
-        }
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::L) && !notes[0].hit) 
-	{
-        if (std::fabs(notes[4].shape.getPosition().y - hitLineY) < 10) 
+			if (std::fabs(notes[i].shape.getPosition().y - hitLineY) < 10) 
+			{
+				notes[i].hit = true;
+				score++;
+				notes[i].~Note();
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::L) && !notes[i].hit)
 		{
-            notes[4].hit = true;
-            score++;
-            notes[4].reset(notes[4].i);
-        }
-    }				
+			if (std::fabs(notes[i].shape.getPosition().y - hitLineY) < 10)
+			{
+				notes[i].hit = true;
+				score++;
+				notes[i].~Note();
+			}
+    	}	
+	}			
 }
+
 
 std::vector<sf::RectangleShape> fillZones( sf::RenderWindow &window)
 {
@@ -92,16 +94,48 @@ void Game::convertMidiToNotes(const string& midiFilePath)
     midifile.doTimeAnalysis();
     midifile.linkNotePairs();
 	float fallTime = (HEIGHT - 100) / SPEED;
+	int lowestNote = 127;
+	int highestNote = 0;
 
+ 	for (int event = 0; event < midifile[1].size(); ++event)
+	{
+		if (midifile[1][event].isNoteOn())
+		{
+			int noteNumber = midifile[1][event][1]; // Note number is the second byte
+        	if (noteNumber < lowestNote) 
+            	lowestNote = noteNumber;
+        	if (noteNumber > highestNote) 
+            	highestNote = noteNumber;
+
+		}
+
+	}
+	range = highestNote - lowestNote;
+	int rangeDiv1 = lowestNote + range / 5;
+	int rangeDiv2 = lowestNote + ((range / 5) * 2);
+	int rangeDiv3 = lowestNote + ((range / 5) * 3);
+	int rangeDiv4 = lowestNote + ((range / 5) * 4);
+	cout << range << std::endl;
+
+	int lane = 0;
     for (int event = 0; event < midifile[1].size(); ++event) 
 	{
 		
         if (midifile[1][event].isNoteOn())
 		{
+			int noteNumber = midifile[1][event][1];
+			if (noteNumber > rangeDiv1 && noteNumber < rangeDiv2)
+				lane = 1;
+			if (noteNumber > rangeDiv2 && noteNumber < rangeDiv3)
+				lane = 2;
+			if (noteNumber > rangeDiv3 && noteNumber < rangeDiv4)
+				lane = 3;
+			if (noteNumber > rangeDiv4)
+				lane = 4;
 			
-            Note n(SPEED, rand() % 4);
-            n.time = midifile[1][event].seconds - 6;
-            n.duration = midifile[1][event].getDurationInSeconds();
+            Note n(SPEED, lane);
+            n.time = midifile[1][event].seconds - 5.9;
+            //n.duration = midifile[1][event].getDurationInSeconds();
             notes.push_back(n);
 			std::cout << n.time << std::endl;
         }
@@ -113,6 +147,15 @@ void Game::init()
 	window.create(sf::VideoMode(800, 600), "SFML Rhythm Game");
 	zones = fillZones(window);
 
+	// if (!backgroundTexture.loadFromFile("/Users/atuliara/reorg/BG.png")) {
+    //     exit (-1);
+    // }
+    // backgroundSprite.setTexture(backgroundTexture);
+    // backgroundSprite.setScale(
+    //     float(window.getSize().x) / backgroundTexture.getSize().x,
+    //     float(window.getSize().y) / backgroundTexture.getSize().y
+    // );
+
     if (!music.openFromFile("/Users/atuliara/reorg/Never-Gonna-Give-You-Up-2.mp3"))
         exit(-1);
 
@@ -123,7 +166,6 @@ void Game::init()
     scoreText.setCharacterSize(24); // in pixels
     scoreText.setFillColor(sf::Color::White);
     scoreText.setPosition(10, window.getSize().y - 40);
-
 }
 
 void Game::processEvents() 
@@ -150,32 +192,32 @@ void Game::render()
 {
 	float currentTime;
     window.clear();
-	for (auto &zone : zones) 
+	//window.draw(backgroundSprite);
+	for (auto &zone : zones)
 	{
-		window.draw(zone); // Draw the zones
+		window.draw(zone);
 	}
 	for (auto &note : notes)
 	{
 		currentTime = music.getPlayingOffset().asSeconds();
 		if (currentTime >= note.time)
-			window.draw(note.shape); // Draw the notes
+			window.draw(note.shape);
 	}
 	scoreText.setString("Score: " + std::to_string(score));
 	window.draw(scoreText);
     window.display();
 }
 
-
 void Game::gameLoop()
 {
-	sf::Clock clock; // Starts the clock
+	sf::Clock clock;
 	music.play();
 
     while (window.isOpen())
 	{
 		deltaTime = clock.restart().asSeconds();
 		processEvents();
-		handleKeyPresses(notes, window.getSize().y - 100);	
+		handleKeyPresses(window.getSize().y - 100);	
 		render();
 	}	
 }

@@ -19,7 +19,7 @@ public:
 	float duration;
 
 	void update(float deltaTime);
-	void reset(int i);
+	void init(int i);
 	bool isBottom(float bottom);
 	sf::RectangleShape shape;
     bool 	hit;

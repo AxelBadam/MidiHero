@@ -20,9 +20,12 @@ public:
 	~Game();
 	void gameLoop();
 	void init();
-	void handleKeyPresses(std::vector<Note> &notes, float hitLineY);
+	void handleKeyPresses(float hitLineY);
 	void convertMidiToNotes(const std::string& midiFilePath);
 private:
+	int range;
+    sf::Texture backgroundTexture;
+    sf::Sprite backgroundSprite;
     void processEvents();
 	float deltaTime;
 	sf::Music music;
