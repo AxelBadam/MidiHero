@@ -9,7 +9,7 @@ Sorry for the low fps on this one :)
 
 ## Getting Started & Prerequisites
 
-If you wish to try the game you may clone this repo and run `make`, after replacing the paths in the makefile to where you have installed the sfml library and midifile library. The midifile library is already provided in this repo.
+If you wish to try the game you may clone this repo and run `make`, after replacing the paths in the makefile to where you have installed the sfml library and midifile library.
 
 ## Built With
 
