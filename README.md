@@ -1,6 +1,6 @@
 # MidiHero
 
-A simple Guitar Hero ish game made with sfml and midifile library, which takes a midi file and an Mp3 as argument and turns them into moving 'notes' that are in sync with the music.
+A simple Guitar Hero ish game made with sfml and midifile library, which takes a midi file and a Mp3 as argument and turns them into moving 'notes' that are in sync with the music.
 
 The game has 5 lanes which are activated by G-H-J-K-L keys! 
 
