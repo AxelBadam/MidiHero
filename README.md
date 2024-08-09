@@ -4,7 +4,7 @@ A simple Guitar Hero ish game made with sfml and midifile library, which takes a
 
 The game has 5 lanes which are activated by G-H-J-K-L keys! 
 
-![Midihero2](https://github.com/AxelBadam/MidiHero/giphy.gif)
+![Midihero2](https://github.com/AxelBadam/MidiHero/blob/main/giphy.gif)
 
 ## Built With
 
