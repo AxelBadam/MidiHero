@@ -1,5 +1,5 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 #include "Note.hpp"
 #include "midifile/include/Binasc.h"
 #include "midifile/include/MidiEvent.h"

@@ -1,8 +1,8 @@
 #ifndef __NOTE_HPP__
 #define __NOTE_HPP__
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 #include <cmath>
 
 #define HEIGHT 600

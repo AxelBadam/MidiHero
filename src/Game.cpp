@@ -1,6 +1,4 @@
 #include "Game.hpp"
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 
 using namespace std;
 using namespace smf;
@@ -158,7 +156,7 @@ void Game::init(char *pathToMp3)
 
     if (!music.openFromFile(pathToMp3))
         exit(-1);
-    if (!font.loadFromFile("./Teko/Teko-VariableFont_wght.ttf"))
+    if (!font.loadFromFile("/Users/axel/Desktop/cmake-sfml-project/src/Teko/Teko-VariableFont_wght.ttf"))
         exit(-1);
 
 	for (int i = 0; i < 5; ++i) 
